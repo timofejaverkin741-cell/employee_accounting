@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${editMode} ? 'Редактирование сотрудника' : 'Добавление сотрудника'">
+        Сотрудник
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 35px auto;
+            padding: 0 20px;
+            background: #f4f6f9;
+            color: #263238;
+        }
+        form {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+        }
+        label { display: block; margin-top: 14px; }
+        input[type="text"], input[type="email"],
+        input[type="number"], input[type="tel"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccd3dc;
+            border-radius: 5px;
+        }
+        .error { color: #b83232; font-size: 14px; }
+        button, .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            border: 0;
+            border-radius: 5px;
+            background: #285b8f;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .checkbox { margin-top: 18px; }
+    </style>
+</head>
+<body>
+
+<h1 th:text="${editMode} ? 'Редактирование сотрудника' : 'Добавление сотрудника'">
+    Сотрудник
+</h1>
+
+<form th:object="${employee}"
+      th:action="${editMode}
+          ? @{/employees/edit/{id}(id=${employee.id})}
+          : @{/employees/add}"
+      method="post">
+
+    <label for="fullName">ФИО</label>
+    <input id="fullName" type="text" th:field="*{fullName}" required>
+    <div class="error" th:errors="*{fullName}"></div>
+
+    <label for="email">Email</label>
+    <input id="email" type="email" th:field="*{email}" required>
+    <div class="error" th:errors="*{email}"></div>
+
+    <label for="phone">Телефон</label>
+    <input id="phone" type="tel" th:field="*{phone}" required>
+    <div class="error" th:errors="*{phone}"></div>
+
+    <label for="position">Должность</label>
+    <input id="position" type="text" th:field="*{position}" required>
+    <div class="error" th:errors="*{position}"></div>
+
+    <label for="salary">Зарплата</label>
+    <input id="salary" type="number" th:field="*{salary}"
+           min="0" step="0.01" required>
+    <div class="error" th:errors="*{salary}"></div>
+
+    <div class="checkbox" th:if="${editMode}">
+        <label>
+            <input type="checkbox" th:field="*{active}">
+            Активный сотрудник
+        </label>
+    </div>
+
+    <div class="checkbox" th:unless="${editMode}">
+        <input type="hidden" name="active" value="true">
+        Новый сотрудник будет активным по умолчанию.
+    </div>
+
+    <button type="submit"
+            th:text="${editMode} ? 'Сохранить изменения' : 'Добавить сотрудника'">
+        Сохранить
+    </button>
+
+    <a class="button" th:href="@{/employees}">Назад</a>
+</form>
+
+</body>
+</html>
